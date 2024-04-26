@@ -3,4 +3,4 @@ description: Collection of helpers for Drupal projects
 package: Octophin
 type: module
 core_version_requirement: ^9 || ^10
-version: '1.0.0'
+version: '1.0.1'
