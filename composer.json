@@ -1,0 +1,17 @@
+{
+    "name": "octophin/drupal-helpers",
+    "description": "Drupal helpers for all Octophin projects",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Octophin\\DrupalHelpers\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "filipnest",
+            "email": "filip@octophin.com"
+        }
+    ],
+    "require": {}
+}
