@@ -11,8 +11,19 @@ function octophin_helpers_preprocess_html(&$variables)
     // Add path as a class with / replaced with --
     $variables['attributes']['class'][] = 'page-path' . str_replace("/", "--", $path);
 
-    $route_name = \Drupal::routeMatch()->getRouteName();
+    $route = \Drupal::routeMatch();
+    
+    $route_name = $route->getRouteName();
 
     // Add route as a class with . replaced with --
     $variables['attributes']['data-route'] = str_replace(".", "--", $route_name);
+
+    $node = \Drupal::request()->attributes->get('node');
+
+    if($node){
+
+        $variables['attributes']['data-entity-id'] = $node->id();
+
+    }
+
 }
