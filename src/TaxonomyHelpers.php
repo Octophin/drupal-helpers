@@ -6,9 +6,13 @@ use Drupal\taxonomy\Entity\Term;
 
 class TaxonomyHelpers
 {
-    
-    public static function get_term_by_name(string $vocabulary, string $name): ?Term
+
+    public static function get_term_by_name(string $vocabulary, string $name, bool $cleanup = false): ?Term
     {
+
+        if ($cleanup) {
+          $name = self::cleanup_term_name($name);
+        }
 
         $result = \Drupal::entityQuery('taxonomy_term')
             ->condition('vid', $vocabulary)
@@ -23,10 +27,14 @@ class TaxonomyHelpers
         }
     }
 
-    public static function upsert_term(string $vocabulary, string $name): Term
+    public static function upsert_term(string $vocabulary, string $name, bool $cleanup = false): Term
     {
 
-        $existing = self::get_term_by_name($vocabulary, $name);
+        if ($cleanup) {
+          $name = self::cleanup_term_name($name);
+        }
+
+        $existing = self::get_term_by_name($vocabulary, $name, $cleanup);
 
         if ($existing) {
 
@@ -42,4 +50,10 @@ class TaxonomyHelpers
 
         return $term;
     }
+
+  public static function cleanup_term_name(string $termName): String
+  {
+    $termName = trim(str_replace(['_', '  '], [' ', ' '], $termName));
+    return $termName;
+  }
 }
