@@ -26,4 +26,11 @@ function octophin_helpers_preprocess_html(&$variables)
 
     }
 
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
+
+    // Add current user roles to data-roles
+
+    $variables['attributes']['data-user-roles'] = $roles;
+
 }
