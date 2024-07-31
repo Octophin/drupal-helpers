@@ -129,31 +129,37 @@ class MediaHelpers
         $results = [];
 
         foreach($fieldsToTestFor as $item){
-            if($field[0]['#media']->hasField($item)){
+            if($field[0]['#media'] && $field[0]['#media']->hasField($item)){
                 $results[$item] = $field[0]['#media']->get($item)->value;
+            } else {
+              $results[$item] = null;
             }
         }
 
-        $mid = $field[0]['#media']->get("mid")->value;
 
-        $fid = $field[0]['#media']->get("field_media_image")->target_id;
+        if($field[0]['#media']) {
 
-        // TODO: please can I have the alt text?
+          $mid = $field[0]['#media']->get("mid")->value;
 
-        $file = File::load($fid);
+          $fid = $field[0]['#media']->get("field_media_image")->target_id;
 
-        $results['main_url'] =  \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          // TODO: please can I have the alt text?
 
-        $uri = $file->getFileUri();
+          $file = File::load($fid);
 
-        $style = ImageStyle::load($image_style);
+          $results['main_url'] =  \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
-        if(empty($style)){
+          $uri = $file->getFileUri();
+
+          $style = ImageStyle::load($image_style);
+
+          if(empty($style)){
             $results['style_url'] =  $results['main_url'];
             $results['note'] = "Style does not exist. defaulting to main";
-        } else {
+          } else {
             $results['note'] = "Style: " . $image_style;
             $results['style_url'] = $style->buildUrl($uri);
+          }
         }
 
         return $results;
