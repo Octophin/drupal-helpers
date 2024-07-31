@@ -2,6 +2,7 @@
 
 namespace Drupal\octophin_helpers;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
@@ -102,5 +103,58 @@ class MediaHelpers
         $image_media->save();
 
         return $image_media;
+    }
+
+    public static function getFieldsFromMedia(array $field, string $image_style = 'large'): array
+    {
+
+        if (empty($field)) {
+
+            return null;
+        }
+
+        //check there is a referenced entity and its a media item
+        if (!array_key_exists(0, $field) && !array_key_exists('#media', $field[0])) {
+
+            return null;
+        }
+
+
+        // list of fields to load
+        $fieldsToTestFor = [
+            'field_citation', 
+            'field_caption'
+        ];
+
+        $results = [];
+
+        foreach($fieldsToTestFor as $item){
+            if($field[0]['#media']->hasField($item)){
+                $results[$item] = $field[0]['#media']->get($item)->value;
+            }
+        }
+
+        $mid = $field[0]['#media']->get("mid")->value;
+ 
+        $fid = $field[0]['#media']->get("field_media_image")->target_id;
+
+        $file = File::load($fid);
+
+        $results['main_url'] =  \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+
+        $uri = $file->getFileUri();
+
+        $style = ImageStyle::load($image_style);
+
+        if(empty($style)){
+            $results['style_url'] =  $results['main_url'];
+            $results['note'] = "Style does not exist. defaulting to main";
+        } else {
+            $results['note'] = "Style: " . $image_style;
+            $results['style_url'] = $style->buildUrl($uri);
+        }
+
+        return $results;
+
     }
 }
