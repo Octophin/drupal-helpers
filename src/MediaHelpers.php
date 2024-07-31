@@ -122,7 +122,7 @@ class MediaHelpers
 
         // list of fields to load
         $fieldsToTestFor = [
-            'field_citation', 
+            'field_citation',
             'field_caption'
         ];
 
@@ -135,8 +135,10 @@ class MediaHelpers
         }
 
         $mid = $field[0]['#media']->get("mid")->value;
- 
+
         $fid = $field[0]['#media']->get("field_media_image")->target_id;
+
+        // TODO: please can I have the alt text?
 
         $file = File::load($fid);
 
