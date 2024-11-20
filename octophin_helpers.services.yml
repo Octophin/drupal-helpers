@@ -1,0 +1,5 @@
+services:
+  octophin_helpers.media_twig_extension:
+    class: Drupal\octophin_helpers\TwigExtension\MediaTwigHelpers
+    tags:
+      - { name: twig.extension }
